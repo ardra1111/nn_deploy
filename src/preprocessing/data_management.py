@@ -13,7 +13,7 @@ def load_dataset(file_name):
 
 def save_model(theta0,theta):
 
-    pkl_file_path = os.path.join(config."SAVED_MODEL_PATH","two_input_xor_nn.pkl")
+    pkl_file_path = os.path.join(config.SAVED_MODEL_PATH,"two_input_xor_nn.pkl")
     with open(pkl_file_path,"wb") as file_handle:
         file_handle.dump({"biases": theta0, "weights" : theta})
 
