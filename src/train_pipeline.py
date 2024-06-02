@@ -66,6 +66,7 @@ def run_training(tol,epsilon ):
    epsilon = 10**(-6)
    epoch_counter = 0
    mse = 1
+   
 
 
 if __name__ =="__main__":
