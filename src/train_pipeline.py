@@ -3,11 +3,11 @@ import numpy as np
 
 from src.config import config
 import src.preprocessing.preprocessors as pp
-from src.preprocessing import data_management
+from src.preprocessing.data_management import load_dataset, save_model, load_model
 
-import pipeline as p
+import pipeline as pl
 
-z = [None]*config.NUM_LAYERS 
+z = [None]*config.NUM_LAYERS
 h = [None]*config.NUM_LAYERS
 
 
@@ -16,12 +16,13 @@ del_hl_by_del_theta0 = [None]*config.NUM_LAYERS
 del_hl_by_del_theta = [None]*config.NUM_LAYERS
 del_L_by_del_h = [None]*config.NUM_LAYERS
 del_L_by_del_theta0 = [None]*config.NUM_LAYERS
-del_L_by_del_theta = [None]*config.NUM_LAYER
+del_L_by_del_theta = [None]*config.NUM_LAYERS
 
 
 def layer_neurons_weighted_sum(previous_layer_neurons_outputs, current_layer_neurons_biases, current_layer_neurons_weights):
-
     return current_layer_neurons_biases + np.matmul(previous_layer_neurons_outputs,current_layer_neurons_weights)
+
+
 
 def layer_neurons_output(current_layer_neurons_weighted_sums, current_layer_neurons_activation_function):
 
@@ -37,6 +38,7 @@ def layer_neurons_output(current_layer_neurons_weighted_sums, current_layer_neur
 
   elif current_layer_neurons_activation_function == "relu":
     return current_layer_neurons_weighted_sums * (current_layer_neurons_weighted_sums > 0)
+  
 
 
 def del_layer_neurons_outputs_wrt_weighted_sums(current_layer_neurons_activation_function, current_layer_neurons_weighted_sums):
@@ -53,16 +55,17 @@ def del_layer_neurons_outputs_wrt_weighted_sums(current_layer_neurons_activation
 
     elif current_layer_neurons_activation_function == "relu":
         return (current_layer_neurons_weighted_sums > 0)
-  
+    
 
 
 def del_layer_neurons_outputs_wrt_biases(current_layer_neurons_outputs_dels):
-
   return current_layer_neurons_outputs_dels
 
-def del_layer_neurons_outputs_wrt_weights(previous_layer_neurons_outputs,current_layer_neurons_outputs_dels):
 
+
+def del_layer_neurons_outputs_wrt_weights(previous_layer_neurons_outputs,current_layer_neurons_outputs_dels):
   return np.matmul(previous_layer_neurons_outputs.T,current_layer_neurons_outputs_dels)
+
 
 
 def run_training(tol,epsilon):
@@ -70,7 +73,7 @@ def run_training(tol,epsilon):
     epoch_counter = 0
     mse = 1
     loss_per_epoch = list()
-  
+    loss_per_epoch.append(mse)
 
     training_data = load_dataset("train.csv")
 
@@ -140,13 +143,12 @@ def run_training(tol,epsilon):
 
       print("Epoch # {}, Loss = {}".format(epoch_counter,mse))
 
-      
-         
+      if abs(loss_per_epoch[epoch_counter] - loss_per_epoch[epoch_counter-1]) < tol:
+         break
+
 
 
 
 if __name__ == "__main__":
-   run_training(10**(-5),10**(-7))
+   run_training(10**(-8),10**(-7))
    save_model(pl.theta0,pl.theta)
-
-
