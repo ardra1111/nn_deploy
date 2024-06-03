@@ -7,7 +7,7 @@ NUM_LAYERS = 3
 P = [NUM_INPUTS,2,1]
 
 
-f = [None,"Linear","Sigmoid"]
+f = [None,"linear","sigmoid"]
 
 
 
