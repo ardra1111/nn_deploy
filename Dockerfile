@@ -10,5 +10,6 @@ RUN chmod -R 777 /app/src
 
 RUN pip install -r /app/src/requirements.txt
 
-ENV PYTHONPATH = ${PYTHONPATH}:/app/src
+ENV PYTHONPATH=${PYTHONPATH}:/app/src
 
+CMD ["python3", "./src/train_pipeline.py"]
